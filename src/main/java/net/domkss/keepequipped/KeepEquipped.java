@@ -13,7 +13,7 @@ public class KeepEquipped implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        initLogger(true);
+        initLogger(false);
     }
 
     public static void initLogger(boolean debug) {

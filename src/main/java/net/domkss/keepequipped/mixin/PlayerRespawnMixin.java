@@ -17,24 +17,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
 import java.util.stream.IntStream;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerRespawnMixin extends PlayerEntity {
 
 
-    public PlayerRespawnMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @Nullable PlayerPublicKey publicKey) {
-        super(world, pos, yaw, gameProfile, publicKey);
+    public PlayerRespawnMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
+        super(world, pos, yaw, gameProfile);
     }
-
 
     @Inject(method = "copyFrom", at = @At(value = "TAIL"))
     private void restoreSavedItems(ServerPlayerEntity oldPlayer, boolean alive,CallbackInfo info){
         int oldPlayerID = oldPlayer.getId();
 
         MinecraftServer server = oldPlayer.getServer();
-        if(server ==null || server.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || oldPlayer.isSpectator()) return;
+        if(server == null || server.getGameRules().getBoolean(GameRules.KEEP_INVENTORY) || oldPlayer.isSpectator()) return;
 
 
         TempInventoryStorage tempStorage = TempInventoryStorage.getInstance();
