@@ -38,10 +38,10 @@ public abstract class PlayerEntityMixin extends LivingEntity{
         DefaultedList<ItemStack> savedOffHand = DefaultedList.ofSize(1,ItemStack.EMPTY);
 
 
-        ItemStack mainHandItem = this.inventory.main.get(this.inventory.selectedSlot).copy();
+        ItemStack mainHandItem = this.inventory.main.get(this.inventory.selectedSlot);
         savedMain.set(0,mainHandItem);
-        IntStream.range(0, savedArmor.size()).forEach(i -> savedArmor.set(i, this.inventory.armor.get(i).copy()));
-        IntStream.range(0, savedOffHand.size()).forEach(i -> savedOffHand.set(i, this.inventory.offHand.get(i).copy()));
+        IntStream.range(0, savedArmor.size()).forEach(i -> savedArmor.set(i, this.inventory.armor.get(i)));
+        IntStream.range(0, savedOffHand.size()).forEach(i -> savedOffHand.set(i, this.inventory.offHand.get(i)));
 
         TempInventoryStorage tempStorage = TempInventoryStorage.getInstance();
 
