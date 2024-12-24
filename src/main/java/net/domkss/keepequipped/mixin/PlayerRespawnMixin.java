@@ -1,8 +1,10 @@
 package net.domkss.keepequipped.mixin;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
 import net.domkss.keepequipped.TempInventoryStorage;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.server.MinecraftServer;
@@ -42,6 +44,25 @@ public abstract class PlayerRespawnMixin extends PlayerEntity {
         DefaultedList<ItemStack> savedMain = tempStorage.getInventoryById(oldPlayerID,"main");
         DefaultedList<ItemStack> savedArmor = tempStorage.getInventoryById(oldPlayerID,"armor");
         DefaultedList<ItemStack> savedOffHand = tempStorage.getInventoryById(oldPlayerID,"offhand");
+        List<DefaultedList<ItemStack>> combinedItemList = ImmutableList.of(savedMain,savedArmor,savedOffHand);
+
+        //Decrease equipment durability with 10% on death
+        combinedItemList.forEach(itemList->itemList.forEach(
+                itemStack -> {
+                    Item item = itemStack.getItem();
+                    if(item.isDamageable()){
+                        int currentDurability = itemStack.getDamage();
+                        int maxDurability = itemStack.getMaxDamage();
+
+                        int durabilityReduction = (int) (maxDurability * 0.10);
+                        int newDurability = currentDurability + durabilityReduction;
+                        newDurability = Math.min(newDurability, maxDurability);
+                        itemStack.setDamage(newDurability);
+                    }
+                }
+        ));
+
+
 
 
         this.getInventory().main.set(0,savedMain.get(0));
