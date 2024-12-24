@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 @Mixin(ServerPlayerEntity.class)
@@ -45,8 +46,7 @@ public abstract class PlayerRespawnMixin extends PlayerEntity {
         //Decrease equipment durability with 10% on death
         combinedItemList.forEach(itemList->itemList.forEach(
                 itemStack -> {
-                    Item item = itemStack.getItem();
-                    if(item.isDamageable()){
+                    if(itemStack.isDamageable()){
                         int currentDurability = itemStack.getDamage();
                         int maxDurability = itemStack.getMaxDamage();
 
